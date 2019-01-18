@@ -6,6 +6,9 @@
 (from https://ipstack.com/)
 Unofficial Golang [ipstack](https://ipstack.com/) library.
 
+[![GoDoc](https://godoc.org/github.com/qioalice/ipstack?status.svg)](https://godoc.org/github.com/qioalice/ipstack)
+[![Go Report Card](https://goreportcard.com/badge/github.com/qioalice/ipstack)](https://goreportcard.com/report/github.com/qioalice/ipstack)
+
 ---
 
 # Take it
