@@ -579,7 +579,7 @@ func (c *Client) Me(forceFetch ...bool) (*Response, error) {
 	// and in the future, if decode will success, we'll save it to 'me' field.
 	r := c.me
 	if r == nil {
-		*r = Response{}
+		r = &Response{}
 	}
 	// Try to decode encoded JSON as 'Response' object, check error
 	if err := rr.DecodeTo(&r); err != nil {
