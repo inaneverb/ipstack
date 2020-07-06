@@ -1171,10 +1171,10 @@ func ParamFields(fields ...string) tClientParam {
 // enables the security module
 //
 // WARNING! You can use securuty module only if you have non-free ipstack account.
-func ParamEnableSecurity(fields ...string) tClientParam {
+func ParamEnableSecurity(is bool) tClientParam {
 	return func(c *Client) {
 		if c != nil {
-			c.baseReq = c.baseReq.EnableSecuity(true)
+			c.baseReq = c.baseReq.EnableSecuity(is)
 		}
 	}
 }
