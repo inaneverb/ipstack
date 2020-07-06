@@ -23,14 +23,16 @@
 
 package ipstack
 
-import "fmt"
-import "net"
-import "time"
-import "strings"
-import "net/http"
-import "net/url"
-import "io/ioutil"
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net"
+	"net/http"
+	"net/url"
+	"strings"
+	"time"
+)
 
 // todo: Tests
 // todo: Example
@@ -104,6 +106,8 @@ const (
 	cApiEndpointHTTP string = "http://api.ipstack.com/"
 	// SSL Web API endpoint, disabled by default
 	cApiEndpointHTTPS string = "https://api.ipstack.com/"
+	// security param
+	securityParam string = "security=1"
 )
 
 // 'Client' is the class that represents golang point to make Web API
@@ -141,11 +145,12 @@ type tClientParam func(c *Client)
 // Read the docs for 'R' method of 'Client' class to understand how
 // 'tRequest' object works and why it exists.
 type tRequest struct {
-	token        string
-	client       *http.Client
-	endpoint     string
-	reqArgs      url.Values
-	reqArgsBuilt string
+	token           string
+	client          *http.Client
+	endpoint        string
+	reqArgs         url.Values
+	reqArgsBuilt    string
+	securityEnabled bool
 }
 
 // 'tResponse' is the internal private type that represents some RAW
@@ -655,6 +660,17 @@ func (r *tRequest) UseHTTPS(is bool) *tRequest {
 	return r
 }
 
+func (r *tRequest) EnableSecuity(is bool) *tRequest {
+	if r == nil {
+		return nil
+	}
+	if is == true {
+		r.securityEnabled = true
+	}
+
+	return r
+}
+
 // 'Fields' allows you to specify what kinds of response you want to get
 // from ipstack Web API.
 //
@@ -795,7 +811,11 @@ func (r *tRequest) validate() error {
 // *. Check error on each of steps above
 func (r *tRequest) do(method string) *tResponse {
 	// Make GET request, if any error occur, return it
-	rr, err := r.client.Get(r.endpoint + method + r.reqArgsBuilt)
+	url := r.endpoint + method + r.reqArgsBuilt
+	if r.securityEnabled {
+		url = url + "&" + securityParam
+	}
+	rr, err := r.client.Get(url)
 	if err != nil {
 		return resp(nil, err)
 	}
@@ -1143,6 +1163,18 @@ func ParamFields(fields ...string) tClientParam {
 	return func(c *Client) {
 		if c != nil {
 			c.baseReq = c.baseReq.Fields(fields...)
+		}
+	}
+}
+
+// 'ParamEnableSecurity' creates a parameter for 'Client' constructors that
+// enables the security module
+//
+// WARNING! You can use securuty module only if you have non-free ipstack account.
+func ParamEnableSecurity(fields ...string) tClientParam {
+	return func(c *Client) {
+		if c != nil {
+			c.baseReq = c.baseReq.EnableSecuity(true)
 		}
 	}
 }
