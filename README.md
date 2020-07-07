@@ -122,6 +122,7 @@ Find your favorite parametrizers:
 | `ParamDisableFirstMeCall`<br>none | Disables the **first test query** while creating the `Client` object. **First test query** is the request info about **your IP** address. If this request will be successfull, it means that `Client` instance created and initialized successfully. And result of that request stores to the internal cache and will be available using `Me` method instantly.
 | `ParamUseHTTPS`<br>`bool`| Switches the schema of Web API requests. `true` means "use **HTTPS**" and `false` means "use **HTTP**" respectively.<br>**Warning!** You can use HTTPS only on a non-free tariffs! You can check it and read about it [here](https://ipstack.com/product/).
 | `ParamFields`<br>`string...` | Specify what kinds of IP's info you want to get from ipstack. You can use predefined constants which starts from `Field` word and pass constants only of that fields, what kind info you want know.<br>**Warning!** Some fields requires diff tariff plans. You can check it and read about it [here](https://ipstack.com/product/).
+| `ParamEnableSecurity`<br>`bool` | Enables security module.<br>**Warning!** Security module requires diff tariff plans.
 
 
 And, for example, it looks like:
@@ -131,7 +132,8 @@ cli, err := ipstack.New(
     ipstack.ParamToken("token"), // specify token
     ipstack.ParamDisableFirstMeCall(), // disable first test query
     ipstack.ParamUseHTTPS(true), // force use HTTPS instead HTTP
-    ipstack.ParamFields(ipstack.FieldCountryName, ipstack.FieldCurrency) // get only country name and currency info
+    ipstack.ParamFields(ipstack.FieldCountryName, ipstack.FieldCurrency), // get only country name and currency info
+    ipstack.ParamEnableSecurity(true) // enables security module (account must support this)
 )
 ```
 
